@@ -32,8 +32,8 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
   String? _note;
 
   @override
-  Widget build(BuildContext context) {
-    final expenseBloc = context.read<ExpenseBloc>();
+  void initState() {
+    super.initState();
 
     if (widget.isEdit && widget.expenseItem != null) {
       _category = widget.expenseItem!.category;
@@ -41,6 +41,11 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
       _selectedDate = widget.expenseItem!.date;
       _note = widget.expenseItem!.note ?? '';
     }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final expenseBloc = context.read<ExpenseBloc>();
 
     return Scaffold(
       appBar: AppBar(
@@ -66,7 +71,7 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
                         value: _category,
                         items: state.categories.map((c) => DropdownMenuItem(value: c.name, child: Text(c.name ?? ''))).toList(),
                         onChanged: (value) => setState(() => _category = value),
-                        validator: (value) => value == null ? 'Required' : null,
+                        validator: (value) => value == null ? 'Required to select' : null,
                       );
                     } else if (state is CategoryError) {
                       return Text('Failed to load categories');
@@ -81,7 +86,7 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
                   initialValue: (_amount ?? 0.0).toStringAsFixed(2),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   onSaved: (value) => _amount = double.parse(value!),
-                  validator: (value) => value == null || double.tryParse(value) == null ? 'Enter valid amount' : null,
+                  validator: (value) => value == null || double.tryParse(value) == null ? 'Enter a valid amount' : null,
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
                   ],
@@ -106,7 +111,7 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
                   },
                 ),
                 40.heightBox,
-                Text('Note (optional):'),
+                Text('Note (Optional):'),
                 TextFormField(
                   initialValue: _note,
                   onSaved: (value) => _note = value,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// For handling image file path
+/// For formatting the currency amount to RM format
 extension CurrencyAmount on double {
   String get toRmCurrency {
     return 'RM ${toStringAsFixed(2)}';

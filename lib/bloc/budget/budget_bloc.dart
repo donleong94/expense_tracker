@@ -6,19 +6,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   BudgetBloc() : super(BudgetInitial()) {
-    on<LoadBudget>(_onLoadBudget);
-    on<SetBudget>(_onSetBudget);
-  }
+    on<LoadBudget>((event, emit) async {
+      emit(BudgetLoading());
+      final totalAmount = getIt<UserPreferences>().getTotalBudget();
+      emit(BudgetLoaded(totalAmount));
+    });
 
-  Future<void> _onLoadBudget(LoadBudget event, Emitter<BudgetState> emit) async {
-    emit(BudgetLoading());
-    final totalAmount = getIt<UserPreferences>().getTotalBudget();
-    emit(BudgetLoaded(totalAmount));
-  }
-
-  Future<void> _onSetBudget(SetBudget event, Emitter<BudgetState> emit) async {
-    final totalAmount = event.amount;
-    getIt<UserPreferences>().setTotalBudget(totalAmount);
-    emit(BudgetLoaded(totalAmount));
+    on<SetBudget>((event, emit) async {
+      final totalAmount = event.amount;
+      getIt<UserPreferences>().setTotalBudget(totalAmount);
+      emit(BudgetLoaded(totalAmount));
+    });
   }
 }

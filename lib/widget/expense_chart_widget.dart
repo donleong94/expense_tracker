@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:expense_tracker/model/ExpenseChartData.dart';
+import 'package:expense_tracker/model/expense_chart_data.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 

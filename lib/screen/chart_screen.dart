@@ -3,8 +3,9 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:expense_tracker/bloc/expense/expense_bloc.dart';
 import 'package:expense_tracker/bloc/expense/expense_state.dart';
-import 'package:expense_tracker/model/ExpenseChartData.dart';
-import 'package:expense_tracker/screen/expense_chart_widget.dart';
+import 'package:expense_tracker/model/expense_chart_data.dart';
+import 'package:expense_tracker/widget/expense_chart_widget.dart';
+import 'package:expense_tracker/utils/general_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -64,13 +65,14 @@ class ChartScreen extends StatelessWidget {
                         ),
                         title: Text(
                           '${item.category} (${item.percentage.toStringAsFixed(2)}%)',
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
                           ),
                         ),
                         trailing: Text(
-                          'RM ${item.amount.toStringAsFixed(2)}',
+                          item.amount.toRmCurrency,
                           style: TextStyle(
                             fontSize: 14,
                           ),

@@ -3,6 +3,7 @@ import 'package:expense_tracker/model/category.dart';
 import 'package:expense_tracker/utils/app_const.dart';
 import 'package:http/http.dart' as http;
 
+/// Service to fetch data from the API
 class ApiService {
   Future<List<Category>> fetchCategories() async {
     final response = await http.get(Uri.parse(AppConst.categoryUrl));

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 
 part 'expense.g.dart';
 
+/// Main model class for an expense.
 @HiveType(typeId: 0)
 class Expense extends HiveObject {
   @HiveField(0)

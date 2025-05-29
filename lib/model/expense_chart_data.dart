@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Model class for storing expense chart data
 class ExpenseChartData {
   ExpenseChartData({
     required this.category,

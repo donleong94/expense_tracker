@@ -8,7 +8,7 @@ import 'package:expense_tracker/bloc/expense/expense_state.dart';
 import 'package:expense_tracker/screen/budget_screen.dart';
 import 'package:expense_tracker/screen/chart_screen.dart';
 import 'package:expense_tracker/screen/expense_form_screen.dart';
-import 'package:expense_tracker/screen/expense_list_widget.dart';
+import 'package:expense_tracker/widget/expense_list_widget.dart';
 import 'package:expense_tracker/utils/app_const.dart';
 import 'package:expense_tracker/utils/general_utils.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +67,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: ListTile(
                         title: Text('Budget: ${budgetState.amount.toRmCurrency}'),
                         subtitle: Text(
-                          isOver ? 'Over budget by ${(-remaining).toRmCurrency}' : 'Remaining: RM ${remaining.toRmCurrency}',
+                          isOver ? 'Over budget by ${(-remaining).toRmCurrency}' : 'Remaining: ${remaining.toRmCurrency}',
                           style: TextStyle(
                             color: isOver
                                 ? Colors.red
@@ -185,9 +185,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Expanded(
-                child: ExpenseListWidget(
-                  expenseList: expenseState.filteredSortedExpenses,
-                ),
+                child: ExpenseListWidget(),
               ),
             ],
           );

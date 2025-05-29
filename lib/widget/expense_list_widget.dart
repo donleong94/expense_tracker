@@ -7,16 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExpenseListWidget extends StatelessWidget {
-  const ExpenseListWidget({
-    super.key,
-    required this.expenseList,
-  });
-
-  final List<Expense> expenseList;
+  const ExpenseListWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<ExpenseBloc>();
+    final expenseBloc = context.read<ExpenseBloc>();
+    final List<Expense> expenseList = expenseBloc.state.filteredSortedExpenses;
 
     return ListView.builder(
       itemCount: expenseList.length,
@@ -29,7 +25,7 @@ class ExpenseListWidget extends StatelessWidget {
           trailing: GestureDetector(
             child: Icon(Icons.delete),
             onTap: () {
-              bloc.add(DeleteExpense(expenseItem));
+              expenseBloc.add(DeleteExpense(expenseItem));
             },
           ),
           onTap: () {

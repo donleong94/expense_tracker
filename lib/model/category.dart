@@ -1,3 +1,4 @@
+/// Main model class for a category.
 class Category {
   Category({
     required this.name,

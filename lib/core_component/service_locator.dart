@@ -17,10 +17,12 @@ Future<void> startup() async {
   Hive.registerAdapter(ExpenseAdapter());
   await Hive.openBox<Expense>(AppConst.hiveExpenseKey);
 
+  // Initialize UserPreferences
   final userPreferences = UserPreferences();
   await userPreferences.init();
   getIt.registerSingleton<UserPreferences>(userPreferences);
 
+  // Initialize ApiService
   getIt.registerSingleton<ApiService>(ApiService());
   getIt.registerSingleton<CategoryRepository>(CategoryRepository(getIt()));
 }

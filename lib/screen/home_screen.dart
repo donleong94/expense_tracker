@@ -25,8 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final expenseBloc = context.read<ExpenseBloc>();
-    final categoryBloc = context.read<CategoryBloc>();
-    final budgetBloc = context.read<BudgetBloc>();
 
     return Scaffold(
       appBar: AppBar(

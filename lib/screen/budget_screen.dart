@@ -3,6 +3,7 @@ import 'package:expense_tracker/bloc/budget/budget_event.dart';
 import 'package:expense_tracker/bloc/budget/budget_state.dart';
 import 'package:expense_tracker/utils/general_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BudgetScreen extends StatefulWidget {
@@ -14,6 +15,7 @@ class BudgetScreen extends StatefulWidget {
 
 class _BudgetScreenState extends State<BudgetScreen> {
   final _controller = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -23,6 +25,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final budgetBloc = context.read<BudgetBloc>();
+
     return Scaffold(
       appBar: AppBar(title: Text('Set Monthly Budget')),
       body: GestureDetector(
@@ -36,19 +40,37 @@ class _BudgetScreenState extends State<BudgetScreen> {
               } else if (state is BudgetLoaded) {
                 _controller.text = state.amount.toStringAsFixed(2);
 
-                return Column(
-                  children: [
-                    TextField(
-                      controller: _controller,
-                      decoration: InputDecoration(labelText: 'Monthly Budget (RM)'),
-                      keyboardType: TextInputType.number,
-                    ),
-                    20.heightBox,
-                    ElevatedButton(
-                      onPressed: _saveBudget,
-                      child: Text('Save'),
-                    ),
-                  ],
+                return Form(
+                  key: _formKey,
+                  child: ListView(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('Monthly Budget (RM)'),
+                      ),
+                      TextFormField(
+                        controller: _controller,
+                        keyboardType: TextInputType.numberWithOptions(decimal: true),
+                        validator: (value) => value == null || double.tryParse(value) == null ? 'Enter a valid budget amount' : null,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                        ],
+                      ),
+                      20.heightBox,
+                      ElevatedButton(
+                        child: Text('Save'),
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+
+                            final value = double.tryParse(_controller.text);
+                            budgetBloc.add(SetBudget(value ?? 0.0));
+                            Navigator.pop(context);
+                          }
+                        },
+                      ),
+                    ],
+                  ),
                 );
               } else {
                 return Container();
@@ -58,20 +80,5 @@ class _BudgetScreenState extends State<BudgetScreen> {
         ),
       ),
     );
-  }
-
-  void _saveBudget() {
-    final value = double.tryParse(_controller.text);
-
-    if (value != null) {
-      context.read<BudgetBloc>().add(SetBudget(value));
-      Navigator.pop(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please enter a valid budget amount'),
-        ),
-      );
-    }
   }
 }

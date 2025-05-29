@@ -2,6 +2,7 @@ import 'package:expense_tracker/bloc/category/category_bloc.dart';
 import 'package:expense_tracker/bloc/category/category_state.dart';
 import 'package:expense_tracker/model/expense.dart';
 import 'package:expense_tracker/utils/general_utils.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:expense_tracker/bloc/expense/expense_bloc.dart';
 import 'package:expense_tracker/bloc/expense/expense_event.dart';
@@ -37,6 +38,7 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
             key: _formKey,
             child: ListView(
               children: [
+                Text('Select Category:'),
                 BlocBuilder<CategoryBloc, CategoryState>(
                   builder: (context, state) {
                     if (state is CategoryLoading) {
@@ -44,7 +46,6 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
                     } else if (state is CategoryLoaded) {
                       return DropdownButtonFormField<String>(
                         value: _category,
-                        hint: Text('Select Category'),
                         items: state.categories.map((c) => DropdownMenuItem(value: c.name, child: Text(c.name ?? ''))).toList(),
                         onChanged: (value) => setState(() => _category = value),
                         validator: (value) => value == null ? 'Required' : null,
@@ -56,15 +57,21 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
                     }
                   },
                 ),
+                40.heightBox,
+                Text('Amount (RM):'),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Amount (RM)'),
-                  keyboardType: TextInputType.number,
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
                   onSaved: (value) => _amount = double.parse(value!),
                   validator: (value) => value == null || double.tryParse(value) == null ? 'Enter valid amount' : null,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d{0,2}')),
+                  ],
                 ),
+                40.heightBox,
+                Text('Date:'),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
-                  title: Text('Date: ${DateFormat.yMMMd().format(_selectedDate)}'),
+                  title: Text(DateFormat.yMMMd().format(_selectedDate)),
                   trailing: Icon(Icons.calendar_today),
                   onTap: () async {
                     DateTime? date = await showDatePicker(
@@ -79,11 +86,12 @@ class _ExpenseFormScreenState extends State<ExpenseFormScreen> {
                     }
                   },
                 ),
+                40.heightBox,
+                Text('Note (optional):'),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Note (optional)'),
                   onSaved: (value) => _note = value,
                 ),
-                20.heightBox,
+                40.heightBox,
                 ElevatedButton(
                   child: Text('Save'),
                   onPressed: () {

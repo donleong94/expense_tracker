@@ -196,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => ExpenseFormScreen()),
+          MaterialPageRoute(builder: (_) => ExpenseFormScreen(isEdit: false)),
         ),
         child: Icon(Icons.add),
       ),

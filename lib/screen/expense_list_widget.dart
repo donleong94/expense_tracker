@@ -1,6 +1,7 @@
 import 'package:expense_tracker/bloc/expense/expense_bloc.dart';
 import 'package:expense_tracker/bloc/expense/expense_event.dart';
 import 'package:expense_tracker/model/expense.dart';
+import 'package:expense_tracker/screen/expense_form_screen.dart';
 import 'package:expense_tracker/utils/general_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,7 +32,17 @@ class ExpenseListWidget extends StatelessWidget {
               bloc.add(DeleteExpense(expenseItem));
             },
           ),
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ExpenseFormScreen(
+                  isEdit: true,
+                  expenseItem: expenseItem,
+                ),
+              ),
+            );
+          },
         );
       },
     );

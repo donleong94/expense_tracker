@@ -23,7 +23,7 @@ class _ExpenseChartWidgetState extends State<ExpenseChartWidget> {
     final pieSections = widget.expenseChartData.mapIndexed((index, item) {
       final isTouched = index == _touchedIndex;
       final fontSize = isTouched ? 25.0 : 16.0;
-      final radius = isTouched ? 120.0 : 90.0;
+      final radius = isTouched ? 160.0 : 140.0;
 
       const shadows = [
         Shadow(
@@ -62,7 +62,7 @@ class _ExpenseChartWidgetState extends State<ExpenseChartWidget> {
         ),
         borderData: FlBorderData(show: false),
         sectionsSpace: 0.0,
-        centerSpaceRadius: 60.0,
+        centerSpaceRadius: 0.0,
         sections: pieSections,
       ),
     );

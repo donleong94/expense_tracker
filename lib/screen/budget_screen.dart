@@ -1,6 +1,7 @@
 import 'package:expense_tracker/bloc/budget/budget_bloc.dart';
 import 'package:expense_tracker/bloc/budget/budget_event.dart';
 import 'package:expense_tracker/bloc/budget/budget_state.dart';
+import 'package:expense_tracker/utils/general_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,7 +43,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       decoration: InputDecoration(labelText: 'Monthly Budget (RM)'),
                       keyboardType: TextInputType.number,
                     ),
-                    SizedBox(height: 20),
+                    20.heightBox,
                     ElevatedButton(
                       onPressed: _saveBudget,
                       child: Text('Save'),

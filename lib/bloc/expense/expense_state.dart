@@ -1,21 +1,31 @@
+import 'package:expense_tracker/bloc/expense/expense_event.dart';
 import 'package:expense_tracker/model/expense.dart';
 
 class ExpenseState {
   final List<Expense> expenses;
-  final List<Expense> filteredExpenses;
+  final List<Expense> filteredSortedExpenses;
+
+  final String? currentCategory;
+  final ExpenseSortOption currentSortOption;
 
   ExpenseState({
     required this.expenses,
-    required this.filteredExpenses,
+    required this.filteredSortedExpenses,
+    required this.currentCategory,
+    required this.currentSortOption,
   });
 
   ExpenseState copyWith({
     List<Expense>? expenses,
-    List<Expense>? filteredExpenses,
+    List<Expense>? filteredSortedExpenses,
+    String? currentCategory,
+    ExpenseSortOption? currentSortOption,
   }) {
     return ExpenseState(
       expenses: expenses ?? this.expenses,
-      filteredExpenses: filteredExpenses ?? this.filteredExpenses,
+      filteredSortedExpenses: filteredSortedExpenses ?? this.filteredSortedExpenses,
+      currentCategory: currentCategory ?? this.currentCategory,
+      currentSortOption: currentSortOption ?? this.currentSortOption,
     );
   }
 }

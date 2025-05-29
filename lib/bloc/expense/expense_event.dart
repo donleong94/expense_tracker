@@ -1,26 +1,32 @@
 import 'package:expense_tracker/model/expense.dart';
 
+enum ExpenseSortOption {
+  dateDesc,
+  dateAsc,
+  amountDesc,
+  amountAsc,
+}
+
 abstract class ExpenseEvent {}
 
 class LoadExpenses extends ExpenseEvent {}
 
 class AddExpense extends ExpenseEvent {
-  final Expense expense;
+  final Expense currentExpense;
 
-  AddExpense(this.expense);
+  AddExpense(this.currentExpense);
 }
 
 class DeleteExpense extends ExpenseEvent {
-  final int index;
+  final Expense currentExpense;
 
-  DeleteExpense(this.index);
+  DeleteExpense(this.currentExpense);
 }
 
 class UpdateExpense extends ExpenseEvent {
-  final int index;
   final Expense updatedExpense;
 
-  UpdateExpense(this.index, this.updatedExpense);
+  UpdateExpense(this.updatedExpense);
 }
 
 class FilterByCategory extends ExpenseEvent {
@@ -28,4 +34,10 @@ class FilterByCategory extends ExpenseEvent {
   final String? category;
 
   FilterByCategory(this.category);
+}
+
+class SortExpenses extends ExpenseEvent {
+  final ExpenseSortOption sortOption;
+
+  SortExpenses(this.sortOption);
 }

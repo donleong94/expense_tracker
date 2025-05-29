@@ -12,8 +12,9 @@ class ExpenseChartWidget extends StatelessWidget {
     return BlocBuilder<ExpenseBloc, ExpenseState>(
       builder: (context, state) {
         final grouped = <String, double>{};
-        for (var e in state.expenses) {
-          grouped[e.category] = (grouped[e.category] ?? 0) + e.amount;
+
+        for (var expenseItem in (state).expenses) {
+          grouped[expenseItem.category] = (grouped[expenseItem.category] ?? 0) + expenseItem.amount;
         }
 
         final pieSections = grouped.entries.map((e) {

@@ -22,8 +22,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? _selectedCategory;
-
   @override
   Widget build(BuildContext context) {
     final expenseBloc = context.read<ExpenseBloc>();
@@ -47,15 +45,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: BlocBuilder<ExpenseBloc, ExpenseState>(
         builder: (expenseContext, expenseState) {
+          final selectedCategory = expenseState.currentCategory;
+
           return Column(
             children: [
               BlocBuilder<BudgetBloc, BudgetState>(
                 builder: (budgetContext, budgetState) {
                   if (budgetState is BudgetLoaded) {
-                    final totalExpenses = expenseState.expenses.fold<double>(
-                      0,
-                      (sum, e) => sum + e.amount,
-                    );
+                    var totalExpenses = 0.0;
+                    totalExpenses = expenseState.expenses.fold<double>(0, (sum, e) => sum + e.amount);
 
                     final remaining = budgetState.amount - totalExpenses;
                     final isOver = remaining < 0;
@@ -118,46 +116,79 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                 },
               ),
-              BlocBuilder<CategoryBloc, CategoryState>(
-                builder: (categoryContext, categoryState) {
-                  if (categoryState is CategoryLoading) {
-                    return Center(child: CircularProgressIndicator());
-                  } else {
-                    List<String> categoryList = [];
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    BlocBuilder<CategoryBloc, CategoryState>(
+                      builder: (categoryContext, categoryState) {
+                        if (categoryState is CategoryLoading) {
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          List<String> categoryList = [];
 
-                    if (categoryState is CategoryLoaded) {
-                      categoryList = categoryState.categories.map((c) => c.name ?? '').toList();
-                    }
+                          if (categoryState is CategoryLoaded) {
+                            categoryList = categoryState.categories.map((c) => c.name ?? '').toList();
+                          }
 
-                    return DropdownButton<String>(
-                      value: _selectedCategory,
-                      hint: _selectedCategory == null ? Text(AppConst.strAllCategories) : Text(_selectedCategory ?? ''),
+                          return DropdownButton<String>(
+                            value: selectedCategory,
+                            hint: selectedCategory == null ? Text(AppConst.strAllCategories) : Text(selectedCategory ?? ''),
+                            items: [
+                              DropdownMenuItem(
+                                value: null,
+                                child: Text(AppConst.strAllCategories),
+                              ),
+                              ...categoryList.map((category) {
+                                return DropdownMenuItem(
+                                  value: category,
+                                  child: Text(category),
+                                );
+                              }),
+                            ],
+                            onChanged: (category) {
+                              expenseBloc.add(FilterByCategory(category));
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    32.widthBox,
+                    Text("Sort by:"),
+                    8.widthBox,
+                    DropdownButton<ExpenseSortOption>(
+                      value: expenseState.currentSortOption,
+                      onChanged: (option) {
+                        if (option != null) {
+                          expenseBloc.add(SortExpenses(option));
+                        }
+                      },
                       items: [
                         DropdownMenuItem(
-                          value: null,
-                          child: Text(AppConst.strAllCategories),
+                          value: ExpenseSortOption.dateDesc,
+                          child: Text("Date ↓"),
                         ),
-                        ...categoryList.map((category) {
-                          return DropdownMenuItem(
-                            value: category,
-                            child: Text(category),
-                          );
-                        }),
+                        DropdownMenuItem(
+                          value: ExpenseSortOption.dateAsc,
+                          child: Text("Date ↑"),
+                        ),
+                        DropdownMenuItem(
+                          value: ExpenseSortOption.amountDesc,
+                          child: Text("Amount ↓"),
+                        ),
+                        DropdownMenuItem(
+                          value: ExpenseSortOption.amountAsc,
+                          child: Text("Amount ↑"),
+                        ),
                       ],
-                      onChanged: (category) {
-                        setState(() {
-                          _selectedCategory = category;
-                        });
-
-                        expenseBloc.add(FilterByCategory(category));
-                      },
-                    );
-                  }
-                },
+                    ),
+                  ],
+                ),
               ),
               Expanded(
                 child: ExpenseListWidget(
-                  expenseList: expenseState.filteredExpenses,
+                  expenseList: expenseState.filteredSortedExpenses,
                 ),
               ),
             ],

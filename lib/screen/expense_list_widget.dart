@@ -21,13 +21,14 @@ class ExpenseListWidget extends StatelessWidget {
       itemCount: expenseList.length,
       itemBuilder: (context, index) {
         final expenseItem = expenseList[index];
+
         return ListTile(
           title: Text('${expenseItem.category}: ${expenseItem.amount.toRmCurrency}'),
           subtitle: Text('${expenseItem.formattedDate}${expenseItem.formattedNote}'),
-          trailing: IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              bloc.add(DeleteExpense(index));
+          trailing: GestureDetector(
+            child: Icon(Icons.delete),
+            onTap: () {
+              bloc.add(DeleteExpense(expenseItem));
             },
           ),
           onTap: () {},
